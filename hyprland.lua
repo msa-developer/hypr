@@ -29,7 +29,7 @@ hl.monitor({
 
 -- Set programs that you use
 local terminal    = "kitty"
-local fileManager = "dolphin"
+local fileManager = "nemo"
 local menu        = "hyprlauncher"
 
 
@@ -129,6 +129,14 @@ hl.config({
 
   animations = {
     enabled = true,
+
+    -- Keep this OFF (default). Turning it on makes Hyprland XOR the slide
+    -- direction whenever a switch happens between the lowest and highest
+    -- existing workspaces (very common: ws 1 <-> ws 2), which reverses the
+    -- animation - workspace 2 would slide in from the LEFT instead of the
+    -- right. Off = natural order: 1 -> 2 slides left (2 enters from the
+    -- right), 2 -> 1 slides right (1 enters from the left).
+    -- workspace_wraparound = false,
   },
 })
 
@@ -144,20 +152,23 @@ hl.curve("easy", { type = "spring", mass = 1, stiffness = 238.1191, dampening = 
 
 hl.animation({ leaf = "global", enabled = true, speed = 10, bezier = "default" })
 hl.animation({ leaf = "border", enabled = true, speed = 5.39, bezier = "easeOutQuint" })
-hl.animation({ leaf = "windows", enabled = true, speed = 4.79, spring = "easy" })
-hl.animation({ leaf = "windowsIn", enabled = true, speed = 4.1, spring = "easy", style = "popin 87%" })
-hl.animation({ leaf = "windowsOut", enabled = true, speed = 1.49, bezier = "linear", style = "popin 87%" })
-hl.animation({ leaf = "fadeIn", enabled = true, speed = 1.73, bezier = "almostLinear" })
-hl.animation({ leaf = "fadeOut", enabled = true, speed = 1.46, bezier = "almostLinear" })
+hl.animation({ leaf = "windows", enabled = true, speed = 3.5, spring = "easy" })
+-- Fast slide in / out when windows open and close
+hl.animation({ leaf = "windowsIn", enabled = true, speed = 2.5, bezier = "quick", style = "slide" })
+hl.animation({ leaf = "windowsOut", enabled = true, speed = 2, bezier = "quick", style = "slide" })
+-- Fade matched to the slide so windows don't vanish mid-flight
+hl.animation({ leaf = "fadeIn", enabled = true, speed = 2, bezier = "almostLinear" })
+hl.animation({ leaf = "fadeOut", enabled = true, speed = 2, bezier = "almostLinear" })
 hl.animation({ leaf = "fade", enabled = true, speed = 3.03, bezier = "quick" })
 hl.animation({ leaf = "layers", enabled = true, speed = 3.81, bezier = "easeOutQuint" })
 hl.animation({ leaf = "layersIn", enabled = true, speed = 4, bezier = "easeOutQuint", style = "fade" })
 hl.animation({ leaf = "layersOut", enabled = true, speed = 1.5, bezier = "linear", style = "fade" })
 hl.animation({ leaf = "fadeLayersIn", enabled = true, speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
-hl.animation({ leaf = "workspaces", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesIn", enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
+-- Fast slide when switching between workspaces (special workspaces inherit this)
+hl.animation({ leaf = "workspaces", enabled = true, speed = 2.5, bezier = "quick", style = "slide" })
+hl.animation({ leaf = "workspacesIn", enabled = true, speed = 2.5, bezier = "quick", style = "slide" })
+hl.animation({ leaf = "workspacesOut", enabled = true, speed = 2.5, bezier = "quick", style = "slide" })
 hl.animation({ leaf = "zoomFactor", enabled = true, speed = 7, bezier = "quick" })
 
 -- Ref https://wiki.hypr.land/configuring/core/rules/workspace-rules/
