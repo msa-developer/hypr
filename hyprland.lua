@@ -343,6 +343,15 @@ hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURC
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"), { locked = true, repeating = true })
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"), { locked = true, repeating = true })
 
+-- LCD brightness from the keyboard as well (requires brightnessctl):
+-- mainMod + SHIFT + B increases, mainMod + B decreases.
+-- Same command/flags as the XF86MonBrightness* keys above, and "repeating" makes
+-- holding the key ramp the brightness instead of only stepping once.
+hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"),
+  { locked = true, repeating = true })
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"),
+  { locked = true, repeating = true })
+
 -- Requires playerctl
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
