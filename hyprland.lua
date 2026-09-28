@@ -22,6 +22,10 @@ hl.monitor({
   scale    = "1.2",
 })
 
+-- Autostart hyprpaper for minimal, low-RAM wallpaper
+hl.on("hyprland.start", function()
+  hl.exec_cmd("hyprpaper")
+end)
 
 ---------------------
 ---- MY PROGRAMS ----
@@ -55,6 +59,12 @@ local menu        = "rofi -show drun"
 
 -- See https://wiki.hypr.land/configuring/core/environment-variables/
 
+-- Cursor theme name must match the directory in /usr/share/icons exactly:
+-- "Bibata-Modern-Ice", NOT "Bibata-Modern_ice". Hyprland's own cursor reads
+-- HYPRCURSOR_THEME, XWayland / GTK apps read XCURSOR_THEME. Size must match
+-- org.gnome.desktop.interface cursor-size, else GTK apps disagree with us.
+hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
+hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 
@@ -216,8 +226,14 @@ hl.config({
 
 hl.config({
   misc = {
-    force_default_wallpaper = 1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
-    disable_hyprland_logo   = true, -- If true disables the random hyprland logo / anime girl background. :(
+    -- No built-in background from Hyprland: no bundled wall*.png, no anime
+    -- mascot. Hyprland just clears to misc.background_color until hyprpaper
+    -- paints over it. force_default_wallpaper is gone because it is ignored
+    -- while this flag is true.
+    disable_hyprland_logo    = true,
+    -- Hyprland also renders a random splash line at the bottom (the "- vaxry"
+    -- one comes from there). Off: nothing is drawn on startup.
+    disable_splash_rendering = true,
   },
 })
 
