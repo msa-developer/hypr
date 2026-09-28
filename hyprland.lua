@@ -30,7 +30,7 @@ hl.monitor({
 -- Set programs that you use
 local terminal    = "kitty"
 local fileManager = "nemo"
-local menu        = "hyprlauncher"
+local menu        = "rofi -show drun"
 
 
 -------------------
@@ -280,6 +280,14 @@ hl.bind(mainMod .. " + M",
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
+
+-- App launcher on mainMod + SPACE (rofi drun, icons on via ~/.config/rofi/config.rasi)
+hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(menu))
+
+-- mainMod + SHIFT + SPACE: rofi "run" mode, type any command and run it
+-- ("run" is in rofi's default mode list; -no-show-icons because run mode has
+--  no icon names to resolve and show-icons is on globally in config.rasi)
+hl.bind(mainMod .. " + SHIFT + SPACE", hl.dsp.exec_cmd("rofi -show run -no-show-icons"))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 
 -- Fullscreen
