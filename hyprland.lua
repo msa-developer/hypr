@@ -22,11 +22,14 @@ hl.monitor({
   scale    = "1.2",
 })
 
--- Autostart wallpaper, status bar and notification daemon
+-- Autostart wallpaper, status bar, notification daemon and clipboard history
 hl.on("hyprland.start", function()
   hl.exec_cmd("hyprpaper")
   hl.exec_cmd("waybar")
   hl.exec_cmd("mako")
+  -- Clipboard history daemon: every clipboard change gets appended to cliphist's db,
+  -- so the SUPER + V picker has something to show. Long-running, so its own call.
+  hl.exec_cmd("wl-paste --watch cliphist store")
 end)
 
 ---------------------
@@ -299,7 +302,13 @@ local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 hl.bind(mainMod .. " + M",
   hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
+-- Clipboard history: list entries in rofi, copy the picked one back with wl-copy.
+-- SUPER + V used to toggle float, that moved to SUPER + SHIFT + V below, nothing lost.
+-- "sel=$(...)" keeps rofi's cancel (no output) out of wl-copy: an empty "cliphist decode"
+-- would otherwise wipe the very clipboard you opened the picker for.
+hl.bind(mainMod .. " + V", hl.dsp.exec_cmd(
+  "sel=$(cliphist list | rofi -dmenu); [ -n \"$sel\" ] && printf \"%s\\n\" \"$sel\" | cliphist decode | wl-copy"))
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 
 -- App launcher on mainMod + SPACE (rofi drun, icons on via ~/.config/rofi/config.rasi)
@@ -505,7 +514,8 @@ hl.window_rule({
 -- SUPER + Q               close focused window politely (app may ask to save)
 -- SUPER + SHIFT + Q       kill focused window dead (SIGKILL, no prompt)
 -- SUPER + C               close focused window (same as SUPER + Q)
--- SUPER + V               toggle floating / tiled
+-- SUPER + V               clipboard history picker (rofi + cliphist, see CLIPBOARD below)
+-- SUPER + SHIFT + V       toggle floating / tiled (moved off SUPER + V for the picker)
 -- SUPER + P               toggle pseudo-tile (dwindle: the window keeps half the split)
 -- SUPER + F               toggle fullscreen
 -- SUPER + SHIFT + F       force leave fullscreen (clears app-requested fullscreen too, e.g. F11)
@@ -544,6 +554,19 @@ hl.window_rule({
 -- SUPER + S               show / hide the magic scratchpad
 -- SUPER + SHIFT + S       move focused window into special:magic
 
+--
+-- --------------------------------------------------------------------------
+-- CLIPBOARD HISTORY  (cliphist daemon + rofi dmenu + wl-copy)
+-- --------------------------------------------------------------------------
+-- SUPER + V               pick an old copy in rofi, the pick is copied back to the clipboard
+-- The history is fed by the "wl-paste --watch cliphist store" autostart at the top of
+-- this file; without that daemon the picker stays empty until something is copied.
+-- Cancel in rofi (ESC) leaves the clipboard untouched (that is what the [ -n "$sel" ]
+-- guard in the bind is for). "cliphist list" prints "id<TAB>preview", and the whole
+-- line - not just the id - is what "cliphist decode" expects.
+-- cliphist stores images too, so picking an image from history copies the image.
+-- Maintenance:  cliphist list | cliphist wipe | cliphist status
+-- (db lives in ~/.cache/cliphist)
 --
 -- --------------------------------------------------------------------------
 -- SCREENSHOTS  (hyprshot + grim + slurp + jq + wl-clipboard; mako shows the toast)
