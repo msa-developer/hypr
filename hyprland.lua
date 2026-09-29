@@ -22,9 +22,11 @@ hl.monitor({
   scale    = "1.2",
 })
 
--- Autostart hyprpaper for minimal, low-RAM wallpaper
+-- Autostart wallpaper, status bar and notification daemon
 hl.on("hyprland.start", function()
   hl.exec_cmd("hyprpaper")
+  hl.exec_cmd("waybar")
+  hl.exec_cmd("mako")
 end)
 
 ---------------------
