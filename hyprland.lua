@@ -38,6 +38,9 @@ local terminal    = "kitty"
 local fileManager = "nemo"
 local menu        = "rofi -show drun"
 
+-- Screenshot folder (hyprshot creates it with mkdir -p if missing)
+local screenshotDir = "/home/person/Pictures/ScreenShots"
+
 
 -------------------
 ---- AUTOSTART ----
@@ -385,6 +388,39 @@ hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tru
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 
 
+----------------------
+---- SCREENSHOTS -----
+----------------------
+
+-- Needs hyprshot + grim + slurp + jq + wl-clipboard (plus mako for the "saved" toast).
+-- Mode triples used below (hyprshot only needs slurp for the region/plain-output modes):
+--   -m active -m output  whole current monitor, geometry from hyprctl, no mouse click
+--   -m window -m active  focused window, geometry from hyprctl, no mouse click
+--   -m region            slurp area pick (needs your mouse)
+-- Plain "-m output" alone would instead make you click a monitor with slurp.
+-- hyprshot always runs wl-copy too, so every saving bind does file + clipboard.
+local stamp    = "$(date +%Y-%m-%d_%H-%M-%S)"
+local saveOpts = " -o " .. screenshotDir .. " -f \"" .. stamp .. "-"
+
+-- Print: whole screen -> file + clipboard
+hl.bind("Print", hl.dsp.exec_cmd("hyprshot -m active -m output" .. saveOpts .. "full.png\""))
+
+-- SUPER + Print: active window -> file + clipboard
+hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("hyprshot -m window -m active" .. saveOpts .. "window.png\""))
+
+-- SHIFT + Print: selected region -> file + clipboard
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd("hyprshot -m region" .. saveOpts .. "select.png\""))
+
+-- CTRL + Print: whole screen -> clipboard only, no file
+hl.bind("CTRL + Print", hl.dsp.exec_cmd("hyprshot -m active -m output --clipboard-only"))
+
+-- CTRL + SUPER + Print: active window -> clipboard only, no file
+hl.bind("CTRL + " .. mainMod .. " + Print", hl.dsp.exec_cmd("hyprshot -m window -m active --clipboard-only"))
+
+-- CTRL + SHIFT + Print: selected region -> clipboard only, no file
+hl.bind("CTRL + SHIFT + Print", hl.dsp.exec_cmd("hyprshot -m region --clipboard-only"))
+
+
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
@@ -433,3 +469,121 @@ hl.window_rule({
   move  = "20 monitor_h-120",
   float = true,
 })
+
+
+-- ==========================================================================
+--              HYPRLAND KEYBINDINGS - CHEAT SHEET (read me first)
+-- ==========================================================================
+--
+-- SUPER = the Windows key. In this file: mainMod = "SUPER".
+-- Every bind reads:  hl.bind("<MODS> + <KEY>", hl.dsp.<action>(...), { opts })
+--   - " + " joins modifiers and the key, all uppercase. Order does not matter.
+--   - Key names are xkb keysyms: RETURN = Enter, SPACE = space, Print = PrtSc,
+--     left / right / up / down = arrow keys, mouse_down / mouse_up = scroll wheel,
+--     mouse:272 = left mouse button, mouse:273 = right mouse button.
+--   - { locked = true }      = also works on the lock screen, { repeating = true } = keeps firing
+--     while the key is held.
+-- Handy commands:
+--   hyprctl reload                     apply edits in this file
+--   hyprctl binds                      show every live bind (source of truth)
+--   hyprctl configerrors               show what a broken edit complained about
+--   hyprctl binds -j | jq -r '.[] | "\(.modmask) \(.key)"'   compact list
+--
+-- --------------------------------------------------------------------------
+-- LAUNCHERS AND PROGRAMS
+-- --------------------------------------------------------------------------
+-- SUPER + RETURN          open terminal (kitty)
+-- SUPER + E               open file manager (nemo)
+-- SUPER + R               app launcher: rofi drun, with icons
+-- SUPER + SPACE           app launcher: rofi drun (same thing, easier to reach)
+-- SUPER + SHIFT + SPACE   run-command launcher: rofi "run" mode, type any command
+-- SUPER + M               exit menu: hyprshutdown if installed, else leave Hyprland
+--
+-- --------------------------------------------------------------------------
+-- WINDOWS
+-- --------------------------------------------------------------------------
+-- SUPER + Q               close focused window politely (app may ask to save)
+-- SUPER + SHIFT + Q       kill focused window dead (SIGKILL, no prompt)
+-- SUPER + C               close focused window (same as SUPER + Q)
+-- SUPER + V               toggle floating / tiled
+-- SUPER + P               toggle pseudo-tile (dwindle: the window keeps half the split)
+-- SUPER + F               toggle fullscreen
+-- SUPER + SHIFT + F       force leave fullscreen (clears app-requested fullscreen too, e.g. F11)
+-- SUPER + T               toggle split direction (dwindle layout only)
+-- SUPER + LMB drag        move window with the mouse
+-- SUPER + RMB drag        resize window with the mouse
+--
+-- --------------------------------------------------------------------------
+-- FOCUS  (vim keys and arrow keys do exactly the same)
+-- --------------------------------------------------------------------------
+-- SUPER + H  or  LEFT     focus window on the left
+-- SUPER + J  or  DOWN     focus window below
+-- SUPER + K  or  UP       focus window above
+-- SUPER + L  or  RIGHT    focus window on the right
+--
+-- --------------------------------------------------------------------------
+-- MOVE WINDOW (same four keys as focus, with SHIFT added)
+-- --------------------------------------------------------------------------
+-- SUPER + SHIFT + H       move window left
+-- SUPER + SHIFT + J       move window down
+-- SUPER + SHIFT + K       move window up
+-- SUPER + SHIFT + L       move window right
+--
+-- --------------------------------------------------------------------------
+-- WORKSPACES (1 .. 10; the "0" key is workspace 10)
+-- --------------------------------------------------------------------------
+-- SUPER + 1 .. 0          switch to workspace 1 .. 10
+-- SUPER + SHIFT + 1 .. 0  send focused window to workspace 1 .. 10
+-- SUPER + mouse_down      next existing workspace  (e+1)
+-- SUPER + mouse_up        previous existing workspace  (e-1)
+-- 3-finger swipe sideways switch workspace (touchpad gesture, hl.gesture)
+--
+-- --------------------------------------------------------------------------
+-- SPECIAL WORKSPACE "magic" (scratchpad - never shown in the normal strip)
+-- --------------------------------------------------------------------------
+-- SUPER + S               show / hide the magic scratchpad
+-- SUPER + SHIFT + S       move focused window into special:magic
+
+--
+-- --------------------------------------------------------------------------
+-- SCREENSHOTS  (hyprshot + grim + slurp + jq + wl-clipboard; mako shows the toast)
+-- Files land in /home/person/Pictures/ScreenShots as <date>_<time>-<kind>.png
+-- hyprshot runs wl-copy as well, so every "file" bind gives you file + clipboard.
+-- Mode flags used: "-m active -m output" = whole monitor, "-m window -m active" =
+-- focused window (both read geometry from hyprctl, no mouse click needed),
+-- "-m region" = draw a box with slurp. "--clipboard-only" = no file written.
+-- --------------------------------------------------------------------------
+-- Print                   whole screen   -> file + clipboard
+-- SUPER + Print           focused window -> file + clipboard
+-- SHIFT + Print           pick region    -> file + clipboard
+-- CTRL + Print            whole screen   -> clipboard only, no file
+-- CTRL + SUPER + Print    focused window -> clipboard only, no file
+-- CTRL + SHIFT + Print    pick region    -> clipboard only, no file
+-- The folder comes from the screenshotDir local near "MY PROGRAMS".
+-- If Print does nothing at all: a 61-key board may never send the Print keysym.
+-- Check with:  wev   (press the key, read the "keysym" line, bind that name instead)
+--
+-- --------------------------------------------------------------------------
+-- VOLUME / MIC / BRIGHTNESS / MEDIA  (hardware keys; volume+brightness are locked)
+-- --------------------------------------------------------------------------
+-- Volume Up               sink volume +5%  (wpctl, capped at 100%)
+-- Volume Down             sink volume -5%
+-- Volume Mute             mute / unmute speakers
+-- Mic Mute                mute / unmute microphone
+-- Brightness Up           LCD brightness +5%  (brightnessctl)
+-- Brightness Down         LCD brightness -5%
+-- SUPER + SHIFT + B       LCD brightness +5%  (keyboard shortcut for Brightness Up)
+-- SUPER + B               LCD brightness -5%
+-- Next / Previous         playerctl next / previous track
+-- Play / Pause            playerctl play-pause  (both keys mapped to the same action)
+-- All of the above repeat while the key is held down.
+--
+-- --------------------------------------------------------------------------
+-- ADDING YOUR OWN BIND (copy - paste one of these lines)
+-- --------------------------------------------------------------------------
+-- hl.bind(mainMod .. " + X", hl.dsp.exec_cmd("some-app"))            -- run a program
+-- hl.bind(mainMod .. " + X", hl.dsp.window.close())                  -- a window action
+-- hl.bind("XF86SomeKey", hl.dsp.exec_cmd("cmd"), { locked = true, repeating = true })
+-- Then run:  hyprctl reload      broken syntax = the old config keeps running,
+-- so check `hyprctl configerrors` right after the reload.
+
