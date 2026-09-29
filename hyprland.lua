@@ -37,9 +37,9 @@ end)
 ---------------------
 
 -- Set programs that you use
-local terminal    = "kitty"
-local fileManager = "nemo"
-local menu        = "rofi -show drun"
+local terminal      = "kitty"
+local fileManager   = "nemo"
+local menu          = "rofi -show drun"
 
 -- Screenshot folder (hyprshot creates it with mkdir -p if missing)
 local screenshotDir = "/home/person/Pictures/ScreenShots"
@@ -609,4 +609,3 @@ hl.window_rule({
 -- hl.bind("XF86SomeKey", hl.dsp.exec_cmd("cmd"), { locked = true, repeating = true })
 -- Then run:  hyprctl reload      broken syntax = the old config keeps running,
 -- so check `hyprctl configerrors` right after the reload.
-
