@@ -262,8 +262,26 @@ hl.config({
 
     sensitivity  = 0, -- -1.0 - 1.0, 0 means no modification.
 
-    touchpad     = {
+    -- Scroll speed. Hyprland default is 1.0, which feels sluggish.
+    -- 1.5 = noticeably faster, still controllable (tune down to 1.2 if it overshoots).
+    -- This build only accepts one top-level scroll_factor plus the touchpad one:
+    -- input.mouse.* and accel_profile are rejected (see hyprctl configerrors).
+    scroll_factor = 1.5,
+
+    -- Touchpad
+    touchpad = {
+      -- Natural = content follows fingers (phone/tablet style: drag down, page
+      -- goes UP). It was on and the direction felt backwards, so: off.
       natural_scroll = false,
+
+      -- Faster scroll than the 1.0 default.
+      scroll_factor = 1.5,
+
+      -- Default is true: touchpad goes dead while you type. Bad UX.
+      disable_while_typing = false,
+
+      -- Two-finger tap = right click (full right half of pad, not the corner).
+      clickfinger_behavior = true,
     },
   },
 })
