@@ -414,6 +414,20 @@ hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 
+-- Plain F1..F12, for external keyboards that send real F-key keysyms instead of
+-- XF86 multimedia ones (the laptop's function row already sends the XF86 keys above).
+-- Same actions, mapped to the F-key row.
+local fKeys = {
+  ["F1"] = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+  ["F2"] = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%-",
+  ["F3"] = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+",
+  ["F6"] = "brightnessctl -e4 -n2 set 5%-",
+  ["F7"] = "brightnessctl -e4 -n2 set 5%+",
+}
+for key, cmd in pairs(fKeys) do
+  hl.bind(key, hl.dsp.exec_cmd(cmd), { locked = true, repeating = true })
+end
+
 
 ----------------------
 ---- SCREENSHOTS -----
