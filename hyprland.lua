@@ -27,6 +27,11 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("hyprpaper")
   hl.exec_cmd("waybar")
   hl.exec_cmd("mako")
+  -- Night light: hyprsunset must be running for `hyprctl hyprsunset` to work,
+  -- since that talks to its socket. Start it neutral (-i); then switch any time
+  -- with:  hyprctl hyprsunset temperature 4500
+  --      and back with:  hyprctl hyprsunset identity
+  hl.exec_cmd("hyprsunset -i")
   -- Clipboard history daemon: every clipboard change gets appended to cliphist's db,
   -- so the SUPER + V picker has something to show. Long-running, so its own call.
   hl.exec_cmd("wl-paste --watch cliphist store")
@@ -408,6 +413,12 @@ hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"),
   { locked = true, repeating = true })
 
+-- Night light: SUPER + SHIFT + N cycles warm. Stops hyprsunset first, because
+-- it only accepts a temperature at startup; if it is already stopped, the pkill
+-- failure falls through to starting it at 3500K.
+hl.bind(mainMod .. " + SHIFT + N",
+  hl.dsp.exec_cmd("pkill -x hyprsunset; hyprsunset -t 3500"))
+
 -- Requires playerctl
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
@@ -629,6 +640,7 @@ hl.window_rule({
 -- Brightness Down         LCD brightness -5%
 -- SUPER + SHIFT + B       LCD brightness +5%  (keyboard shortcut for Brightness Up)
 -- SUPER + B               LCD brightness -5%
+-- SUPER + SHIFT + N       night light on/off (hyprsunset, warm 3500K profile)
 -- Next / Previous         playerctl next / previous track
 -- Play / Pause            playerctl play-pause  (both keys mapped to the same action)
 -- All of the above repeat while the key is held down.
