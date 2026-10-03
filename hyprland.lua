@@ -282,8 +282,9 @@ hl.config({
       -- Faster scroll than the 1.0 default.
       scroll_factor = 1.5,
 
-      -- Default is true: touchpad goes dead while you type. Bad UX.
-      disable_while_typing = false,
+      -- Typing guard (libinput): first keystroke kills the touchpad, it comes
+      -- back after a short idle gap. This is the OS-level feature, no scripting.
+      disable_while_typing = true,
 
       -- Two-finger tap = right click (full right half of pad, not the corner).
       clickfinger_behavior = true,
