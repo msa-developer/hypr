@@ -26,7 +26,8 @@ One command for everything this config uses:
 ```sh
 sudo pacman -S hyprpaper waybar mako hyprpolkitagent hyprsunset wl-clipboard cliphist \
   kitty nemo rofi hyprshot grim slurp jq wireplumber brightnessctl \
-  playerctl whisper-cpp wtype libnotify
+  playerctl whisper-cpp wtype libnotify \
+  ttf-jetbrains-mono-nerd otf-font-awesome ttf-dejavu noto-fonts noto-fonts-emoji
 ```
 
 Optional:
