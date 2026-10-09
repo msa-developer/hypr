@@ -421,11 +421,12 @@ hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"),
   { locked = true, repeating = true })
 
--- Night light: SUPER + SHIFT + N cycles warm. Stops hyprsunset first, because
--- it only accepts a temperature at startup; if it is already stopped, the pkill
--- failure falls through to starting it at 3500K.
+-- Night light: SUPER + SHIFT + N sets dim warm for dark room.
+-- 2800K + 85% gamma: less blue + less brightness. pkill first, hyprsunset
+-- only takes temp/gamma at startup. Back to neutral:
+--   hyprctl hyprsunset identity
 hl.bind(mainMod .. " + SHIFT + N",
-  hl.dsp.exec_cmd("pkill -x hyprsunset; hyprsunset -t 3500"))
+  hl.dsp.exec_cmd("pkill -x hyprsunset; hyprsunset -t 2800 -g 85"))
 
 -- Voice-to-text toggle: press once, speak, press again. Types into focused window (opencode).
 hl.bind(mainMod .. " + SHIFT + D", hl.dsp.exec_cmd("/home/person/.config/hypr/stt.sh"))

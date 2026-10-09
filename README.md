@@ -27,8 +27,10 @@ One command for everything this config uses:
 sudo pacman -S hyprpaper waybar mako hyprpolkitagent hyprsunset wl-clipboard cliphist \
   kitty nemo rofi hyprshot grim slurp jq wireplumber brightnessctl \
   playerctl whisper-cpp wtype libnotify \
+  xdg-desktop-portal-hyprland xdg-desktop-portal-gtk pipewire-pulse adwaita-icon-theme inotify-tools wev \
   ttf-jetbrains-mono-nerd otf-font-awesome ttf-dejavu noto-fonts noto-fonts-emoji
 ```
+AUR (via yay/paru): `bibata-cursor-theme`, `zscroll`. Optional waybar click-apps: `ghostty`, `bluetui`, `nmrs`.
 
 Optional:
 
