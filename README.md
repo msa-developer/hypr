@@ -41,6 +41,12 @@ hyprctl reload
 Model is free (MIT), offline, no account. `base.en` is the speed/accuracy
 sweet spot; swap in a bigger `ggml-*.bin` if you want better accuracy.
 
+Note: the `whisper-cpp` package installs the binary as `whisper-cli`
+(`stt.sh` already calls the right name).
+
+No text typed? You skipped the install or the model download. Fail toast
+points at `/tmp/hypr-stt.err` for the exact error.
+
 ## Dark mode
 
 Default. Applied on every login via `gsettings` autostart + `GTK_THEME` env.

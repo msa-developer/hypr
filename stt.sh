@@ -10,9 +10,14 @@ if [ -f "$PIDF" ]; then
   rm -f "$PIDF"
   [ -f "$MODEL" ] || { notify-send "STT" "missing model $MODEL"; exit 1; }
   notify-send "STT" "transcribing…"
-  whisper-cpp -m "$MODEL" -f "$WAV" -otxt -of /tmp/hypr-stt 2>/dev/null
-  tr '\n' ' ' < /tmp/hypr-stt.txt | wtype -
-  notify-send "STT" "typed."
+  # NB: Arch package whisper-cpp ships binary `whisper-cli`, not `whisper-cpp`.
+  if whisper-cli -m "$MODEL" -f "$WAV" -otxt -of /tmp/hypr-stt 2>/tmp/hypr-stt.err \
+    && [ -s /tmp/hypr-stt.txt ]; then
+    tr '\n' ' ' < /tmp/hypr-stt.txt | wtype -
+    notify-send "STT" "typed."
+  else
+    notify-send "STT" "failed — see /tmp/hypr-stt.err"
+  fi
 else
   pw-record --rate 16000 --channels 1 "$WAV" &
   echo $! > "$PIDF"
