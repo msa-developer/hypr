@@ -27,6 +27,8 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("hyprpaper")
   hl.exec_cmd("waybar")
   hl.exec_cmd("mako")
+  -- Auth agent for root prompts (nemo mounts, etc.). Without it they fail silent.
+  hl.exec_cmd("hyprpolkitagent")
   -- Night light: hyprsunset must be running for `hyprctl hyprsunset` to work,
   -- since that talks to its socket. Start it neutral (-i); then switch any time
   -- with:  hyprctl hyprsunset temperature 4500
@@ -35,6 +37,9 @@ hl.on("hyprland.start", function()
   -- Clipboard history daemon: every clipboard change gets appended to cliphist's db,
   -- so the SUPER + V picker has something to show. Long-running, so its own call.
   hl.exec_cmd("wl-paste --watch cliphist store")
+  -- Dark mode: GTK + portal apps follow this (Firefox, nemo, rofi file pickers).
+  hl.exec_cmd("gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'")
+  hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'")
 end)
 
 ---------------------
@@ -80,6 +85,8 @@ hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
 hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
+-- Dark fallback for GTK apps started before gsettings applies.
+hl.env("GTK_THEME", "Adwaita:dark")
 
 
 -----------------------
@@ -419,6 +426,9 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"),
 -- failure falls through to starting it at 3500K.
 hl.bind(mainMod .. " + SHIFT + N",
   hl.dsp.exec_cmd("pkill -x hyprsunset; hyprsunset -t 3500"))
+
+-- Voice-to-text toggle: press once, speak, press again. Types into focused window (opencode).
+hl.bind(mainMod .. " + SHIFT + D", hl.dsp.exec_cmd("/home/person/.config/hypr/stt.sh"))
 
 -- Requires playerctl
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
