@@ -6,6 +6,18 @@ Files:
 - `hyprpaper.conf` — wallpaper config
 - `wallpaper.jpg` — wallpaper
 - `stt.sh` — voice-to-text toggle script (SUPER + SHIFT + D)
+- `setup.sh` — fresh-machine bootstrap (packages + model + dark mode)
+
+## Fresh install
+
+Config lives in git, so no reconfiguration ever. On a new OS:
+
+```sh
+git clone https://github.com/msa-developer/hypr ~/.config/hypr
+~/.config/hypr/setup.sh
+```
+
+Then log into Hyprland. Done.
 
 ## Install
 
@@ -71,5 +83,5 @@ hyprctl binds           # live binds (source of truth)
 hyprctl configerrors    # what a broken edit complained about
 ```
 
-Full keybind list lives at the bottom of `hyprland.lua` (SUPER = Windows key).
+Full keybind list: `KEYBINDINGS.md` (SUPER = Windows key).
 Screenshots land in `~/Pictures/ScreenShots`.
