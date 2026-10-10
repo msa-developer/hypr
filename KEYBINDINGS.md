@@ -78,7 +78,7 @@ No Print key on small boards? Run `wev`, press the key, bind the shown keysym.
 
 | Bind | Action |
 |---|---|
-| SUPER + U | Disable / re-enable built-in keyboard fully (incl. Fn-row F5/F6/F7, USB keyboard stays active) |
+| SUPER + U | Disable / re-enable laptop keyboard (at-translated-set-2-keyboard) |
 
 ## Handy commands
 
