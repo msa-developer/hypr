@@ -312,6 +312,21 @@ hl.device({
   sensitivity = -0.5,
 })
 
+-- Laptop keyboard toggle (not permanent, toggle at runtime with SUPER + U).
+-- Press once: disable at-translated-set-2-keyboard, press again: re-enable.
+-- `hl.device(enabled=...)` is per https://wiki.hypr.land/configuring/core/devices/
+-- (enabled valid for keyboards). Verified with:
+--   hyprctl eval 'hl.device({name="video-bus", enabled=false})' -> ok
+local laptopKbEnabled = true
+hl.bind("SUPER + U", function()
+  laptopKbEnabled = not laptopKbEnabled
+  hl.device({ name = "at-translated-set-2-keyboard", enabled = laptopKbEnabled })
+  hl.notification.create({
+    text    = laptopKbEnabled and "Laptop keyboard: ON" or "Laptop keyboard: OFF",
+    timeout = 1500,
+  })
+end)
+
 
 ---------------------
 ---- KEYBINDINGS ----
