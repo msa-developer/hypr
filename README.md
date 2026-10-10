@@ -62,6 +62,17 @@ Note: the `whisper-cpp` package installs the binary as `whisper-cli`
 No text typed? You skipped the install or the model download. Fail toast
 points at `/tmp/hypr-stt.err` for the exact error.
 
+## Laptop keyboard (SUPER + U)
+
+Press once to disable the built-in keyboard fully (normal keys + Fn row
+F5/F6/F7, brightness/volume hotkeys), press again to re-enable. Mako shows
+`Laptop keyboard: OFF/ON` toast.
+
+Covers all internal devices (`at-translated-set-2-keyboard`,
+`dell-wmi-hotkeys`, `video-bus`, `intel-hid-events`,
+`intel-hid-5-button-array`, `dell-privacy-driver`). External USB keyboard
+and power button stay active. Verify list with `hyprctl devices`.
+
 ## Dark mode
 
 Default. Applied on every login via `gsettings` autostart + `GTK_THEME` env.

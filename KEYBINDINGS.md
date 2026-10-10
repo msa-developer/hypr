@@ -74,6 +74,12 @@ No Print key on small boards? Run `wev`, press the key, bind the shown keysym.
 | F1 / F2 / F3 | Mute / volume- / volume+ (external keyboards) |
 | F6 / F7 | Brightness- / brightness+ (external keyboards) |
 
+## Laptop keyboard
+
+| Bind | Action |
+|---|---|
+| SUPER + U | Disable / re-enable built-in keyboard fully (incl. Fn-row F5/F6/F7, USB keyboard stays active) |
+
 ## Handy commands
 
 ```sh

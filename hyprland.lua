@@ -313,14 +313,29 @@ hl.device({
 })
 
 -- Laptop keyboard toggle (not permanent, toggle at runtime with SUPER + U).
--- Press once: disable at-translated-set-2-keyboard, press again: re-enable.
+-- A laptop exposes several Hyprland keyboard devices, not one:
+-- `hyprctl devices` shows at-translated-set-2-keyboard (normal keys) plus
+-- dell-wmi-hotkeys / video-bus / intel-hid-events (Fn row, XF86 media and
+-- brightness keys like F5/F6/F7). Disabling only the AT device leaves the
+-- hotkey devices alive, which is why F5/F6/F7 kept working.
+-- So SUPER+U toggles all internal devices below, and never touches the
+-- external zxzk USB keyboard or power-button (safety).
 -- `hl.device(enabled=...)` is per https://wiki.hypr.land/configuring/core/devices/
--- (enabled valid for keyboards). Verified with:
---   hyprctl eval 'hl.device({name="video-bus", enabled=false})' -> ok
+-- (enabled valid for keyboards).
+local laptopKeyboards = {
+  "at-translated-set-2-keyboard",
+  "dell-wmi-hotkeys",
+  "video-bus",
+  "intel-hid-events",
+  "intel-hid-5-button-array",
+  "dell-privacy-driver",
+}
 local laptopKbEnabled = true
 hl.bind("SUPER + U", function()
   laptopKbEnabled = not laptopKbEnabled
-  hl.device({ name = "at-translated-set-2-keyboard", enabled = laptopKbEnabled })
+  for _, name in ipairs(laptopKeyboards) do
+    hl.device({ name = name, enabled = laptopKbEnabled })
+  end
   hl.notification.create({
     text    = laptopKbEnabled and "Laptop keyboard: ON" or "Laptop keyboard: OFF",
     timeout = 1500,
