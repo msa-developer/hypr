@@ -8,7 +8,7 @@ SUPER = Windows key. Live truth: `hyprctl binds`.
 |---|---|
 | SUPER + RETURN | Terminal (kitty) |
 | SUPER + E | File manager (nemo) |
-| SUPER + R / SUPER + SPACE | App launcher (rofi drun) |
+| SUPER + SPACE | App launcher (rofi drun) |
 | SUPER + SHIFT + SPACE | Run-command launcher (rofi run mode) |
 | SUPER + SHIFT + M | Exit menu (hyprshutdown, else leave Hyprland) |
 | SUPER + SHIFT + D | Voice to text: press, speak, press again (types into focused window) |
@@ -62,6 +62,14 @@ SUPER = Windows key. Live truth: `hyprctl binds`.
 | CTRL + SHIFT + Print | Pick region → clipboard only |
 
 No Print key on small boards? Run `wev`, press the key, bind the shown keysym.
+
+## Recording (file-only → `/home/person/videos/screen-recordings/record-*.mp4`, wiki pick: `wf-recorder`, audio OFF by default)
+
+| Bind | Action |
+|---|---|
+| SUPER + SHIFT + R | Full screen → file, press again to stop |
+| SUPER + SHIFT + Print | Pick region (slurp) → file, press again to stop |
+| SUPER + SHIFT + A | Toggle record audio ON/OFF |
 
 ## Volume / brightness / media (repeat while held)
 

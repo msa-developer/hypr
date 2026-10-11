@@ -352,7 +352,6 @@ hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd(
   "sel=$(cliphist list | rofi -dmenu); [ -n \"$sel\" ] && printf \"%s\\n\" \"$sel\" | cliphist decode | wl-copy"))
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 
 -- App launcher on mainMod + SPACE (rofi drun, icons on via ~/.config/rofi/config.rasi)
 hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(menu))
@@ -495,6 +494,23 @@ hl.bind("CTRL + " .. mainMod .. " + Print", hl.dsp.exec_cmd("hyprshot -m window 
 
 -- CTRL + SHIFT + Print: selected region -> clipboard only, no file
 hl.bind("CTRL + SHIFT + Print", hl.dsp.exec_cmd("hyprshot -m region --clipboard-only"))
+
+
+----------------------
+---- RECORDING -------
+----------------------
+
+-- Hyprland wiki pick: wf-recorder (lightweight, wlroots-native).
+-- File-only -> /home/person/videos/screen-recordings/record-*.mp4, no clipboard.
+-- Audio OFF by default; SUPER + SHIFT + A toggles (toast shows state).
+-- SUPER + SHIFT + R: full screen, press again stop
+hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("/home/person/.config/hypr/rec.sh"))
+
+-- SUPER + SHIFT + Print: region pick (slurp), press again stop
+hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd("/home/person/.config/hypr/rec.sh region"))
+
+-- SUPER + SHIFT + A: toggle record audio on/off
+hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd("/home/person/.config/hypr/rec.sh audio"))
 
 
 --------------------------------

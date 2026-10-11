@@ -6,6 +6,7 @@ Files:
 - `hyprpaper.conf` — wallpaper config
 - `wallpaper.jpg` — wallpaper
 - `stt.sh` — voice-to-text toggle script (SUPER + SHIFT + D)
+- `rec.sh` — screen-record toggle (SUPER + SHIFT + R full, SUPER + SHIFT + Print region, SUPER + SHIFT + A audio)
 - `setup.sh` — fresh-machine bootstrap (packages + model + dark mode)
 
 ## Fresh install
@@ -26,7 +27,7 @@ One command for everything this config uses:
 ```sh
 sudo pacman -S hyprpaper waybar mako hyprpolkitagent hyprsunset wl-clipboard cliphist \
   kitty nemo rofi hyprshot grim slurp jq wireplumber brightnessctl \
-  playerctl whisper-cpp wtype libnotify \
+  playerctl wf-recorder whisper-cpp wtype libnotify \
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk pipewire-pulse adwaita-icon-theme inotify-tools wev \
   ttf-jetbrains-mono-nerd otf-font-awesome ttf-dejavu noto-fonts noto-fonts-emoji
 ```
@@ -99,3 +100,18 @@ hyprctl configerrors    # what a broken edit complained about
 
 Full keybind list: `KEYBINDINGS.md` (SUPER = Windows key).
 Screenshots land in `~/Pictures/ScreenShots`.
+Recordings land in `/home/person/videos/screen-recordings/record-*.mp4` (file-only, audio OFF by default).
+
+## Screen recording (SUPER + SHIFT + R / Print / A)
+
+Wiki pick: `wf-recorder` (lightweight, wlroots-native). No clipboard copy.
+
+```sh
+sudo pacman -S wf-recorder slurp libnotify  # slurp only for region mode
+```
+
+Press once to start, press again to stop:
+
+- `SUPER + SHIFT + R` — full screen → file
+- `SUPER + SHIFT + Print` — pick region via slurp → file
+- `SUPER + SHIFT + A` — toggle audio ON/OFF (toast shows state, persists in `/tmp/hypr-rec-audio`)
