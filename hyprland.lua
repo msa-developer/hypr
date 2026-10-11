@@ -412,7 +412,7 @@ hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 -- Laptop multimedia keys for volume and LCD brightness
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 2.0 @DEFAULT_AUDIO_SINK@ 5%+"),
   { locked = true, repeating = true })
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
   { locked = true, repeating = true })
@@ -453,8 +453,8 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 -- Same actions, mapped to the F-key row.
 local fKeys = {
   ["F1"] = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-  ["F2"] = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%-",
-  ["F3"] = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+",
+  ["F2"] = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
+  ["F3"] = "wpctl set-volume -l 2.0 @DEFAULT_AUDIO_SINK@ 5%+",
   ["F6"] = "brightnessctl -e4 -n2 set 5%-",
   ["F7"] = "brightnessctl -e4 -n2 set 5%+",
 }
