@@ -115,3 +115,32 @@ Press once to start, press again to stop:
 - `SUPER + SHIFT + R` — full screen → file
 - `SUPER + SHIFT + Print` — pick region via slurp → file
 - `SUPER + SHIFT + A` — toggle audio ON/OFF (toast shows state, persists in `/tmp/hypr-rec-audio`)
+
+## External screens (HDMI / USB-C / smart board / monitor)
+
+Intel iGPU needs no extra driver. One-time:
+
+```sh
+sudo pacman -S --needed intel-media-driver libva-intel-driver wlr-randr
+```
+
+Auto-mirror on plug: already in `hyprland.lua` — `HDMI-A-1/HDMI-A-2/DP-1/DP-2`
+mirror `eDP-1`. Just plug board. No command needed.
+
+Use HDMI first. USB-C video works only with DP Alt Mode port.
+USB-only docks need AUR `displaylink` — skip unless HDMI fails.
+
+Check name:
+
+```sh
+hyprctl monitors
+```
+
+Manual mirror (Lua build needs `eval`, not `keyword`):
+
+```sh
+hyprctl eval 'hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "auto", scale = 1, mirror = "eDP-1" })'
+```
+
+No picture = change board input source, not driver.
+App share (Meet/Zoom): pick Screen, Hyprland portal picker shows.

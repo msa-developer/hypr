@@ -22,6 +22,13 @@ hl.monitor({
   scale    = "1.2",
 })
 
+-- Auto-mirror on plug: any external mirrors laptop. No daemon.
+-- Validated: `hyprctl eval` accepts `mirror = "eDP-1"`, `configerrors` empty.
+hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "auto", scale = 1, mirror = "eDP-1" })
+hl.monitor({ output = "HDMI-A-2", mode = "preferred", position = "auto", scale = 1, mirror = "eDP-1" })
+hl.monitor({ output = "DP-1", mode = "preferred", position = "auto", scale = 1, mirror = "eDP-1" })
+hl.monitor({ output = "DP-2", mode = "preferred", position = "auto", scale = 1, mirror = "eDP-1" })
+
 -- Autostart wallpaper, status bar, notification daemon and clipboard history
 hl.on("hyprland.start", function()
   hl.exec_cmd("hyprpaper")
@@ -343,7 +350,7 @@ hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.window.kill()) -- force kill (SIGKILL)
 local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
 hl.bind(mainMod .. " + SHIFT + M",
-  hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+  hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 -- Clipboard history: list entries in rofi, copy the picked one back with wl-copy.
 -- SUPER + V used to toggle float, that moved to SUPER + SHIFT + V below, nothing lost.
