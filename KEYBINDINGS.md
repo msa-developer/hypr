@@ -33,6 +33,7 @@ SUPER = Windows key. Live truth: `hyprctl binds`.
 |---|---|
 | SUPER + H/J/K/L or arrows | Focus left / down / up / right |
 | SUPER + SHIFT + H/J/K/L | Move window left / down / up / right |
+| SUPER + CTRL + H/J/K/L | Resize window left / down / up / right (20px, repeats on hold) |
 
 ## Workspaces (0 = workspace 10)
 
